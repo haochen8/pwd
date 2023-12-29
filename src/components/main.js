@@ -5,6 +5,32 @@
  * @version 1.0.0
  */
 
+// Activate drag functions for windows
+dragElement(document.getElementById('window-memory-game'))
+dragElement(document.getElementById('window-message-app'))
+/**
+ * Open the window.
+ *
+ * @param {*} windowId - The id of the window.
+ */
+function openWindow (windowId) {
+  const window = document.getElementById(windowId)
+  if (window.style.display === 'none' || window.style.display === '') {
+    // Show the window
+    window.style.display = 'block'
+    dragElement(window)
+  } else {
+    // Hide the window
+    window.style.display = 'none'
+  }
+}
+// Add event listeners for icons
+document.getElementById('memory-game-icon').addEventListener('click', function () {
+  openWindow('window-memory-game')
+})
+document.getElementById('message-app-icon').addEventListener('click', function () {
+  openWindow('window-message-app')
+})
 /**
  * Drag the element.
  *
@@ -65,6 +91,3 @@ function dragElement (element) {
     document.onmousemove = null
   }
 }
-// Activate drag functions for windows
-dragElement(document.getElementById('window1'))
-dragElement(document.getElementById('window2'))
