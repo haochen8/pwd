@@ -49,8 +49,8 @@ body, html {
 .window {
     display: none;
     position: absolute;
-    width: 300px;
-    height: 200px;
+    width: 500px;
+    height: 300px;
     border: 1px solid #ccc;
     background-color: #fff;
     border-radius: 5px;
