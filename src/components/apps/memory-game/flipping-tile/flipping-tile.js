@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+const IMG_URL = (new URL('images/food.png', import.meta.url)).href
+
 // Define template.
 const template = document.createElement('template')
 template.innerHTML = `

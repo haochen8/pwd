@@ -14,6 +14,7 @@ body, html {
 }
 
 #desktop {
+    position: relative;
     width: 100%;
     height: calc(100% - 50px);
     overflow: hidden;
@@ -47,7 +48,6 @@ body, html {
 }
 
 .window {
-    display: none;
     position: absolute;
     width: 500px;
     height: 300px;
@@ -57,8 +57,21 @@ body, html {
   }
   
   .title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     cursor: move;
     background-color: #eee;
     padding: 5px;
     border-bottom: 1px solid #ccc;
+  }
+
+  .window-controls button {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-left: 5px;
   }

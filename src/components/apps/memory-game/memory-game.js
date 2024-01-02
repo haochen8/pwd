@@ -231,7 +231,7 @@ customElements.define('my-memory-game',
         }
       }
 
-      // Create a sequence of numbers between 0 and 15,
+      // Create a sequence of numbers between 0 and 23,
       // and then shuffle the sequence.
       const indexes = [...Array(tilesCount).keys()]
 
