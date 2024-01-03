@@ -104,7 +104,10 @@ function createNewWindow (appTitle, appLogo) {
   const newWindow = document.createElement('div')
   newWindow.className = 'window'
   newWindow.isMaximized = false
-  newWindow.defaultSize = { width: windowWidth, height: windowHeight }
+  // Store the original size of the window
+  newWindow.originalSize = { width: windowWidth, height: windowHeight }
+  // Store the original position of the window
+  newWindow.originalPosition = { top: '...', left: '...' }
   // Mark this app as open
   openedWindows[appTitle] = newWindow
 
@@ -149,13 +152,20 @@ function createNewWindow (appTitle, appLogo) {
    * Maximize the window and restore it.
    */
   maximizeButton.onclick = function () {
-    // Restore the window
+    // Restore the window to its original size and position
     if (newWindow.isMaximized) {
       newWindow.style.width = '500px'
       newWindow.style.height = '300px'
+      newWindow.style.top = newWindow.originalPosition.top
+      newWindow.style.left = newWindow.originalPosition.left
       newWindow.isMaximized = false
     } else {
-      // Maximize withing the desktop
+      // Store the original size and position of the window
+      newWindow.originalSize.width = newWindow.offsetWidth
+      newWindow.originalSize.height = newWindow.offsetHeight
+      newWindow.originalPosition.top = newWindow.style.top
+      newWindow.originalPosition.left = newWindow.style.left
+      // Maximize within the desktop
       newWindow.style.width = document.getElementById('desktop').offsetWidth + 'px'
       newWindow.style.height = document.getElementById('desktop').offsetHeight + 'px'
       newWindow.style.top = '0px'
