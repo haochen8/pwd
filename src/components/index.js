@@ -7,10 +7,10 @@
 
 document.getElementById('memory-game-icon').addEventListener('click', function () {
   console.log('Memory game icon clicked')
-  createNewWindow('Memory Game')
+  createNewWindow('Memory Game', 'components/apps/images/memory-game.png')
 })
 document.getElementById('message-app-icon').addEventListener('click', function () {
-  createNewWindow('Message App')
+  createNewWindow('Message App', 'components/apps/images/message-app.png')
 })
 /**
  * Drag the element.
@@ -18,6 +18,7 @@ document.getElementById('message-app-icon').addEventListener('click', function (
  * @param {HTMLElement} element - The element to drag.
  */
 function dragElement (element) {
+  // Set 4 positions
   let pos1 = 0; let pos2 = 0; let pos3 = 0; let pos4 = 0
 
   // If present, the header is where you move the DIV from
@@ -67,41 +68,72 @@ function dragElement (element) {
    *
    */
   function closeDragElement () {
+    // The final position of the window
+    lastPosition.x = element.offsetLeft
+    lastPosition.y = element.offsetTop
     // Stop moving when mouse button is released
     document.onmouseup = null
     document.onmousemove = null
   }
 }
 
-let windowCounter = 0
-let highestZIndex = 100
+const defaultPosition = {
+  x: 500,
+  y: 150
+}
+const newPositionOffset = {
+  x: 20,
+  y: 20
+}
+let lastPosition = { ...defaultPosition }
 
+let highestZIndex = 100
+const openedWindows = {}
+const windowWidth = 300
+const windowHeight = 200
+const desktopWidth = 1000
+const desktopHeight = 600
 /**
  * The counter for windows.
  *
- * @param {string} appContent - The content of the app.
+ * @param {string} appTitle - The title of the app.
+ * @param {string} appLogo - The logo of the app.
  */
-function createNewWindow (appContent) {
-  windowCounter++
+function createNewWindow (appTitle, appLogo) {
+  // Window
   const newWindow = document.createElement('div')
-  newWindow.id = `window-${windowCounter}`
   newWindow.className = 'window'
-  newWindow.style.zIndex = highestZIndex++
-  newWindow.style.display = 'block'
+  newWindow.isMaximized = false
+  newWindow.defaultSize = { width: windowWidth, height: windowHeight }
+  // Mark this app as open
+  openedWindows[appTitle] = newWindow
 
-  // Set size and position
-  newWindow.style.top = `${windowCounter * 30}px`
-  newWindow.style.left = `${windowCounter * 30}px`
+  let newX = lastPosition.x + newPositionOffset.x
+  let newY = lastPosition.y + newPositionOffset.y
+
+  // Check if the new position is offscreen and reset if necessary
+  if (newX + windowWidth > desktopWidth || newY + windowHeight > desktopHeight) {
+    newX = defaultPosition.x
+    newY = defaultPosition.y
+  }
+
+  newWindow.style.top = `${newY}px`
+  newWindow.style.left = `${newX}px`
+
+  // Update last position for next window
+  lastPosition = { x: newX, y: newY }
 
   // Title bar
   const titleBar = document.createElement('div')
   titleBar.className = 'title-bar'
-  titleBar.textContent = `App ${windowCounter}`
 
+  // Window controls
+  const windowControls = document.createElement('div')
+  windowControls.className = 'window-controls'
   // Minimize button
   const minimizeButton = document.createElement('button')
   minimizeButton.className = 'Minimize'
-  minimizeButton.textContent = '_'
+  minimizeButton.textContent = '-'
   /**
    * Minimize the window.
    */
@@ -114,36 +146,50 @@ function createNewWindow (appContent) {
   maximizeButton.className = 'Maximize'
   maximizeButton.textContent = '□'
   /**
-   * Maximize the window.
+   * Maximize the window and restore it.
    */
   maximizeButton.onclick = function () {
-    if (newWindow.style.width === '100%') {
-      newWindow.style.width = '50%'
-      newWindow.style.height = '50%'
-      newWindow.style.top = '25%'
-      newWindow.style.left = '25%'
+    // Restore the window
+    if (newWindow.isMaximized) {
+      newWindow.style.width = '500px'
+      newWindow.style.height = '300px'
+      newWindow.isMaximized = false
     } else {
-      newWindow.style.width = '100%'
-      newWindow.style.height = '100%'
-      newWindow.style.top = '0'
-      newWindow.style.left = '0'
+      // Maximize withing the desktop
+      newWindow.style.width = document.getElementById('desktop').offsetWidth + 'px'
+      newWindow.style.height = document.getElementById('desktop').offsetHeight + 'px'
+      newWindow.style.top = '0px'
+      newWindow.style.left = '0px'
+      newWindow.isMaximized = true
     }
   }
 
   // Close button
   const closeButton = document.createElement('button')
   closeButton.className = 'Close'
+  closeButton.textContent = 'x'
   /**
    * Close the window.
    */
   closeButton.onclick = function () {
+    delete openedWindows[appTitle]
     newWindow.remove()
   }
 
-  titleBar.appendChild(closeButton)
-  titleBar.appendChild(minimizeButton)
-  titleBar.appendChild(maximizeButton)
+  // Append elements to window controls
+  windowControls.appendChild(closeButton)
+  windowControls.appendChild(minimizeButton)
+  windowControls.appendChild(maximizeButton)
 
+  // App Logo
+  const logoImage = document.createElement('img')
+  logoImage.src = appLogo
+  logoImage.className = 'app-logo'
+  logoImage.alt = appTitle
+
+  // Append elements to title bar
+  titleBar.appendChild(windowControls)
+  titleBar.appendChild(logoImage)
   newWindow.appendChild(titleBar)
 
   document.getElementById('desktop').appendChild(newWindow)
