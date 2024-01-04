@@ -252,11 +252,15 @@ function initResize (window, handle, direction) {
         // Southwest resizer
         const widthChange = startX - e.clientX
         const newWidth = Math.max(startWidth + widthChange, 200)
-        const newLeft = startLeft - widthChange
+        if (newWidth > 200) {
+          window.style.width = newWidth + 'px'
+          window.style.left = (startLeft - widthChange) + 'px'
+        } else {
+          // When the width is at its minimum, only update the height
+          window.style.width = '200px' // Set to minimum width
+        }
         const newHeight = Math.max(startHeight + e.clientY - startY, 200)
         window.style.height = newHeight + 'px'
-        window.style.width = newWidth + 'px'
-        window.style.left = newLeft + 'px'
       }
     }
     /**
