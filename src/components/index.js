@@ -6,7 +6,6 @@
  */
 
 document.getElementById('memory-game-icon').addEventListener('click', function () {
-  console.log('Memory game icon clicked')
   createNewWindow('Memory Game', 'components/apps/images/memory-game.png')
 })
 document.getElementById('message-app-icon').addEventListener('click', function () {
@@ -76,17 +75,17 @@ function dragElement (element) {
     document.onmousemove = null
   }
 }
-
+// The default position of the window
 const defaultPosition = {
   x: 500,
   y: 150
 }
+// The offset of the new window
 const newPositionOffset = {
   x: 20,
   y: 20
 }
 let lastPosition = { ...defaultPosition }
-
 let highestZIndex = 100
 const openedWindows = {}
 const windowWidth = 300
@@ -100,7 +99,7 @@ const desktopHeight = 600
  * @param {string} appLogo - The logo of the app.
  */
 function createNewWindow (appTitle, appLogo) {
-  // Window
+  // New window
   const newWindow = document.createElement('div')
   newWindow.className = 'window'
   newWindow.isMaximized = false
@@ -207,6 +206,70 @@ function createNewWindow (appTitle, appLogo) {
   dragElement(newWindow)
   // Bring window to front
   bringToFront(newWindow)
+
+  const resizeHandleSE = document.createElement('div')
+  resizeHandleSE.className = 'resize-handle resize-handle-se'
+  const resizeHandleSW = document.createElement('div')
+  resizeHandleSW.className = 'resize-handle resize-handle-sw'
+  // Append resize handles to window
+  newWindow.appendChild(resizeHandleSW)
+  newWindow.appendChild(resizeHandleSE)
+
+  initResize(newWindow, resizeHandleSE, 'se')
+  initResize(newWindow, resizeHandleSW, 'sw')
+}
+/**
+ * Initialize window resizing.
+ *
+ * @param {*} window - The window to resize.
+ * @param {*} handle - The handle to resize.
+ * @param {*} direction - The direction to resize.
+ */
+function initResize (window, handle, direction) {
+  handle.addEventListener('mousedown', function (e) {
+    // Prevent firing of default dragging
+    e.stopPropagation()
+    const startX = e.clientX
+    const startY = e.clientY
+    const startWidth = parseInt(document.defaultView.getComputedStyle(window).width, 10)
+    const startHeight = parseInt(document.defaultView.getComputedStyle(window).height, 10)
+    const startLeft = window.offsetLeft
+    e.preventDefault()
+
+    /**
+     * Resize the window.
+     *
+     * @param {Event} e - The event.
+     */
+    function resizeWindow (e) {
+      if (direction === 'se') {
+        // Southeast resizer
+        const newWidth = Math.max(startWidth + e.clientX - startX, 200)
+        const newHeight = Math.max(startHeight + e.clientY - startY, 200)
+        window.style.width = newWidth + 'px'
+        window.style.height = newHeight + 'px'
+      } else if (direction === 'sw') {
+        // Southwest resizer
+        const widthChange = startX - e.clientX
+        const newWidth = Math.max(startWidth + widthChange, 200)
+        const newLeft = startLeft - widthChange
+        const newHeight = Math.max(startHeight + e.clientY - startY, 200)
+        window.style.height = newHeight + 'px'
+        window.style.width = newWidth + 'px'
+        window.style.left = newLeft + 'px'
+      }
+    }
+    /**
+     * Stop resizing the window.
+     */
+    function stopResize () {
+      document.removeEventListener('mousemove', resizeWindow)
+      document.removeEventListener('mouseup', stopResize)
+    }
+    // Add event listeners
+    document.addEventListener('mousemove', resizeWindow)
+    document.addEventListener('mouseup', stopResize)
+  })
 }
 
 /**
