@@ -5,12 +5,28 @@
  * @version 1.0.0
  */
 
+import '../components/apps/memory-game'
+console.log('Modules imported in index.js')
+// import './apps/memory-game/flipping-tile/flipping-tile.js'
+// document.getElementById('memory-game-icon').addEventListener('click', function () {
+//   createNewWindow('Memory Game', 'components/apps/images/memory-game.png')
+// })
 document.getElementById('memory-game-icon').addEventListener('click', function () {
-  createNewWindow('Memory Game', 'components/apps/images/memory-game.png')
+  memoryGameContent()
 })
 document.getElementById('message-app-icon').addEventListener('click', function () {
   createNewWindow('Message App', 'components/apps/images/message-app.png')
 })
+/**
+ * Memory game content.
+ *
+ */
+function memoryGameContent () {
+  const memoryGameWindow = createNewWindow('Memory Game', '/components/apps/images/memory-game.png')
+  const memoryGame = document.createElement('my-memory-game')
+  memoryGameWindow.appendChild(memoryGame)
+  console.log('memoryGameContent is called')
+}
 /**
  * Drag the element.
  *
@@ -97,8 +113,9 @@ const desktopHeight = 600
  *
  * @param {string} appTitle - The title of the app.
  * @param {string} appLogo - The logo of the app.
+ * @param {HTMLElement} content - The content of the app.
  */
-function createNewWindow (appTitle, appLogo) {
+function createNewWindow (appTitle, appLogo, content) {
   // New window
   const newWindow = document.createElement('div')
   newWindow.className = 'window'
@@ -217,6 +234,11 @@ function createNewWindow (appTitle, appLogo) {
 
   initResize(newWindow, resizeHandleSE, 'se')
   initResize(newWindow, resizeHandleSW, 'sw')
+
+  // Add content to the window
+  if (content) {
+    newWindow.appendChild(content())
+  }
 }
 /**
  * Initialize window resizing.

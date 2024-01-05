@@ -4,8 +4,8 @@
  * @author // Hao Chen <hc222ig@student.lnu.se>
  * @version 1.0.0
  */
-
-const IMG_URL = (new URL('images/food.png', import.meta.url)).href
+console.log('flipping-tile.js is loaded')
+const IMG_URL = (new URL('images/lnu-symbol.png', import.meta.url)).href
 
 // Define template.
 const template = document.createElement('template')

@@ -5,8 +5,8 @@
  * @version 1.0.0
  */
 
-import './flipping-tile/flipping-tile.js'
-
+import '../memory-game/flipping-tile'
+console.log('memory-game.js is loaded')
 /*
  * Get image URLs.
  */
@@ -14,7 +14,7 @@ const NUMBER_OF_IMAGES = 13
 
 const IMG_URLS = new Array(NUMBER_OF_IMAGES)
 for (let i = 0; i < NUMBER_OF_IMAGES; i++) {
-  IMG_URLS[i] = (new URL(`images/${i}.png`, import.meta.url)).href
+  IMG_URLS[i] = (new URL(`./images/${i}.png`, import.meta.url)).href
 }
 
 /*
@@ -127,7 +127,7 @@ customElements.define('my-memory-game',
     get #gameBoardSize () {
       const gameBoardSize = {
         width: 4,
-        height: 4
+        height: 6
       }
 
       switch (this.boardSize) {

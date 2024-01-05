@@ -3,7 +3,7 @@
   "version": "1.1.1",
   "description": "1DV025 - Examination Assignment Module B - PWD",
   "type": "module",
-  "browser": "src/js/index.js",
+  "browser": "src/components/index.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
