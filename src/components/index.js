@@ -5,12 +5,7 @@
  * @version 1.0.0
  */
 
-import '../components/apps/memory-game'
-console.log('Modules imported in index.js')
-// import './apps/memory-game/flipping-tile/flipping-tile.js'
-// document.getElementById('memory-game-icon').addEventListener('click', function () {
-//   createNewWindow('Memory Game', 'components/apps/images/memory-game.png')
-// })
+import './apps/memory-game/memory-game.js'
 document.getElementById('memory-game-icon').addEventListener('click', function () {
   memoryGameContent()
 })
@@ -25,7 +20,8 @@ function memoryGameContent () {
   const memoryGameWindow = createNewWindow('Memory Game', '/components/apps/images/memory-game.png')
   const memoryGame = document.createElement('my-memory-game')
   memoryGameWindow.appendChild(memoryGame)
-  console.log('memoryGameContent is called')
+  memoryGame.style.width = '100%'
+  memoryGame.style.height = '100%'
 }
 /**
  * Drag the element.
@@ -114,6 +110,7 @@ const desktopHeight = 600
  * @param {string} appTitle - The title of the app.
  * @param {string} appLogo - The logo of the app.
  * @param {HTMLElement} content - The content of the app.
+ * @returns {HTMLElement} - The new window.
  */
 function createNewWindow (appTitle, appLogo, content) {
   // New window
@@ -168,10 +165,10 @@ function createNewWindow (appTitle, appLogo, content) {
    * Maximize the window and restore it.
    */
   maximizeButton.onclick = function () {
-    // Restore the window to its original size and position
+    // // Restore the window to its original size and position
     if (newWindow.isMaximized) {
-      newWindow.style.width = '500px'
-      newWindow.style.height = '300px'
+      newWindow.style.width = newWindow.originalSize.width + 'px'
+      newWindow.style.height = newWindow.originalSize.height + 'px'
       newWindow.style.top = newWindow.originalPosition.top
       newWindow.style.left = newWindow.originalPosition.left
       newWindow.isMaximized = false
@@ -187,6 +184,11 @@ function createNewWindow (appTitle, appLogo, content) {
       newWindow.style.top = '0px'
       newWindow.style.left = '0px'
       newWindow.isMaximized = true
+      // Maximize the content area and restore it
+      if (content) {
+        content.style.width = '100%'
+        content.style.height = '100%'
+      }
     }
   }
 
@@ -223,7 +225,7 @@ function createNewWindow (appTitle, appLogo, content) {
   dragElement(newWindow)
   // Bring window to front
   bringToFront(newWindow)
-
+  // Resize handles
   const resizeHandleSE = document.createElement('div')
   resizeHandleSE.className = 'resize-handle resize-handle-se'
   const resizeHandleSW = document.createElement('div')
@@ -231,14 +233,20 @@ function createNewWindow (appTitle, appLogo, content) {
   // Append resize handles to window
   newWindow.appendChild(resizeHandleSW)
   newWindow.appendChild(resizeHandleSE)
+  // Initialize window resizing
+  initResize(newWindow, resizeHandleSE, 'se', content)
+  initResize(newWindow, resizeHandleSW, 'sw', content)
 
-  initResize(newWindow, resizeHandleSE, 'se')
-  initResize(newWindow, resizeHandleSW, 'sw')
-
-  // Add content to the window
+  /**
+   * Resize the content area.
+   *
+   * @param {number} width - The width of the content area.
+   * @param {number} height - The height of the content area.
+   */
   if (content) {
-    newWindow.appendChild(content())
+    newWindow.appendChild(content)
   }
+  return newWindow
 }
 /**
  * Initialize window resizing.
@@ -246,17 +254,19 @@ function createNewWindow (appTitle, appLogo, content) {
  * @param {*} window - The window to resize.
  * @param {*} handle - The handle to resize.
  * @param {*} direction - The direction to resize.
+ * @param {*} contentArea - The content area to resize.
+ * @param {*} titleBar - The title bar to resize.
  */
-function initResize (window, handle, direction) {
+function initResize (window, handle, direction, contentArea, titleBar) {
   handle.addEventListener('mousedown', function (e) {
     // Prevent firing of default dragging
     e.stopPropagation()
+    e.preventDefault()
     const startX = e.clientX
     const startY = e.clientY
-    const startWidth = parseInt(document.defaultView.getComputedStyle(window).width, 10)
-    const startHeight = parseInt(document.defaultView.getComputedStyle(window).height, 10)
+    const startWidth = window.offsetWidth
+    const startHeight = window.offsetHeight
     const startLeft = window.offsetLeft
-    e.preventDefault()
 
     /**
      * Resize the window.
@@ -264,6 +274,7 @@ function initResize (window, handle, direction) {
      * @param {Event} e - The event.
      */
     function resizeWindow (e) {
+      console.log('Resizing:', 'New Width:', window.style.width, 'New Height:', window.style.height)
       if (direction === 'se') {
         // Southeast resizer
         const newWidth = Math.max(startWidth + e.clientX - startX, 200)
@@ -283,7 +294,10 @@ function initResize (window, handle, direction) {
         }
         const newHeight = Math.max(startHeight + e.clientY - startY, 200)
         window.style.height = newHeight + 'px'
+
+        window.resizeContentArea(newWidth, newHeight)
       }
+      console.log('Resizing:', 'New Width:', window.style.width, 'New Height:', window.style.height)
     }
     /**
      * Stop resizing the window.

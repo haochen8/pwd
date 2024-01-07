@@ -24,7 +24,11 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
-      --tile-size: 80px;
+      --tile-size: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     #game-board {
       display: grid;
