@@ -165,29 +165,40 @@ function createNewWindow (appTitle, appLogo, content) {
    * Maximize the window and restore it.
    */
   maximizeButton.onclick = function () {
-    // // Restore the window to its original size and position
-    if (newWindow.isMaximized) {
-      newWindow.style.width = newWindow.originalSize.width + 'px'
-      newWindow.style.height = newWindow.originalSize.height + 'px'
-      newWindow.style.top = newWindow.originalPosition.top
-      newWindow.style.left = newWindow.originalPosition.left
-      newWindow.isMaximized = false
-    } else {
-      // Store the original size and position of the window
-      newWindow.originalSize.width = newWindow.offsetWidth
-      newWindow.originalSize.height = newWindow.offsetHeight
-      newWindow.originalPosition.top = newWindow.style.top
-      newWindow.originalPosition.left = newWindow.style.left
-      // Maximize within the desktop
-      newWindow.style.width = document.getElementById('desktop').offsetWidth + 'px'
-      newWindow.style.height = document.getElementById('desktop').offsetHeight + 'px'
-      newWindow.style.top = '0px'
-      newWindow.style.left = '0px'
+    const desktop = document.getElementById('desktop')
+    const desktopWidth = desktop.offsetWidth
+    const desktopHeight = desktop.offsetHeight
+
+    if (!newWindow.isMaximized) {
+      // Store the original size and position if not already maximized
+      newWindow.originalSize = { width: newWindow.clientWidth, height: newWindow.clientHeight }
+      newWindow.originalPosition = { x: newWindow.offsetLeft, y: newWindow.offsetTop }
+
+      // Maximize the window
+      newWindow.style.width = `${desktopWidth}px`
+      newWindow.style.height = `${desktopHeight}px`
+      newWindow.style.top = '0'
+      newWindow.style.left = '0'
+
       newWindow.isMaximized = true
-      // Maximize the content area and restore it
-      if (content) {
+    } else {
+      // Restore the window to its original size and position
+      newWindow.style.width = `${newWindow.originalSize.width}px`
+      newWindow.style.height = `${newWindow.originalSize.height}px`
+      newWindow.style.top = `${newWindow.originalPosition.y}px`
+      newWindow.style.left = `${newWindow.originalPosition.x}px`
+
+      newWindow.isMaximized = false
+    }
+
+    // Content size
+    if (content) {
+      if (newWindow.isMaximized) {
         content.style.width = '100%'
         content.style.height = '100%'
+      } else {
+        content.style.width = `${newWindow.originalSize.width}px`
+        content.style.height = `calc(${newWindow.originalSize.height}px - 40px)`
       }
     }
   }
@@ -285,12 +296,15 @@ function initResize (window, handle, direction, contentArea, titleBar) {
         // Southwest resizer
         const widthChange = startX - e.clientX
         const newWidth = Math.max(startWidth + widthChange, 200)
+        const heightChange = e.clientY - startY
+        const newHeight = Math.max(startHeight + heightChange, 200)
+        // Adjust the width
         if (newWidth > 200) {
           window.style.width = newWidth + 'px'
           window.style.left = (startLeft - widthChange) + 'px'
-        } else {
-          // When the width is at its minimum, only update the height
-          window.style.width = '200px' // Set to minimum width
+        }
+        if (newHeight > 200) {
+          window.style.height = newHeight + 'px'
         }
       }
       console.log('Resizing:', 'New Width:', window.style.width, 'New Height:', window.style.height)
