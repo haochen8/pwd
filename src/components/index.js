@@ -21,7 +21,7 @@ function memoryGameContent () {
   const memoryGame = document.createElement('my-memory-game')
   memoryGameWindow.appendChild(memoryGame)
   memoryGame.style.width = '100%'
-  memoryGame.style.height = '100%'
+  memoryGame.style.height = 'calc(100% - 40px)'
 }
 /**
  * Drag the element.
@@ -89,8 +89,8 @@ function dragElement (element) {
 }
 // The default position of the window
 const defaultPosition = {
-  x: 500,
-  y: 150
+  x: 550,
+  y: 50
 }
 // The offset of the new window
 const newPositionOffset = {
@@ -292,10 +292,6 @@ function initResize (window, handle, direction, contentArea, titleBar) {
           // When the width is at its minimum, only update the height
           window.style.width = '200px' // Set to minimum width
         }
-        const newHeight = Math.max(startHeight + e.clientY - startY, 200)
-        window.style.height = newHeight + 'px'
-
-        window.resizeContentArea(newWidth, newHeight)
       }
       console.log('Resizing:', 'New Width:', window.style.width, 'New Height:', window.style.height)
     }
