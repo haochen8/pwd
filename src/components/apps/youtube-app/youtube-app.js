@@ -4,7 +4,7 @@
  * @author // Hao Chen <hc222ig@student.lnu.se>
  * @version 1.0.0
  */
-
+// Youtube API key.
 const API_KEY = 'AIzaSyA_UPH3uAA5MZpvhJOdoOCeTYWB5-5dPrE'
 // Define template.
 const template = document.createElement('template')
@@ -18,6 +18,29 @@ template.innerHTML = `
         height: 100%;
         overflow: hidden;
         background-color: #f0f0f0;
+    }
+    #searchInput {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-right: 8px;
+    width: calc(100% - 100px);
+    box-sizing: border-box;
+    }
+    #searchButton {
+        background-color: #ff0000;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        padding: 8px 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    #searchButton:hover {
+        background-color: #e50000;
     }
 </style>
 <div id="searchContainer">
@@ -65,21 +88,18 @@ customElements.define('my-youtube-app',
       this.#searchButton = this.shadowRoot.querySelector('#searchButton')
       // Get the video player element in the shadow root.
       this.#videoPlayer = this.shadowRoot.querySelector('#videoPlayer')
-      this.boundSearchVideoClick = this.searchVideoClick.bind(this)
     }
 
     /**
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      console.log('Adding event listeners')
-      this.#searchButton.addEventListener('click', this.boundSearchVideoClick)
-      this.#searchInput.addEventListener('focus', () => {
-        console.log('Input field is focused')
+      // Add event listeners.
+      this.#searchButton.addEventListener('click', this.searchVideoClick.bind(this))
+      this.#searchInput.addEventListener('focus', (event) => {
       })
-      this.#searchInput.addEventListener('click', () => {
+      this.#searchInput.addEventListener('click', (event) => {
         this.#searchInput.focus()
-        console.log('Input field is clicked')
       })
     }
 
@@ -87,7 +107,8 @@ customElements.define('my-youtube-app',
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-      this.#searchButton.removeEventListener('click', this.boundSearchVideoClick)
+      // Remove event listeners.
+      this.#searchButton.removeEventListener('click', this.searchVideoClick.bind(this))
     }
 
     /**
