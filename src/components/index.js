@@ -295,7 +295,6 @@ function initResize (window, handle, direction) {
      * @param {Event} e - The event.
      */
     function resizeWindow (e) {
-      console.log('Resizing:', 'New Width:', window.style.width, 'New Height:', window.style.height)
       if (direction === 'se') {
         // Southeast resizer
         const newWidth = Math.max(startWidth + e.clientX - startX, 200)
@@ -317,7 +316,6 @@ function initResize (window, handle, direction) {
           window.style.height = newHeight + 'px'
         }
       }
-      console.log('Resizing:', 'New Width:', window.style.width, 'New Height:', window.style.height)
     }
     /**
      * Stop resizing the window.

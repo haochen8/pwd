@@ -4,7 +4,7 @@
  * @author // Hao Chen <hc222ig@student.lnu.se>
  * @version 1.0.0
  */
-
+console.log('Message App is loaded')
 const SERVER_URL = 'wss://courselab.lnu.se/message-app/socket'
 const API_KEY = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
 
@@ -127,13 +127,19 @@ customElements.define('my-message-app',
         this.sendMessage(this.#messageInput.value)
         this.#messageInput.value = ''
       })
+      // Reconnect if the connection is closed.
+      if (!this.#socket || this.#socket.readyState === WebSocket.CLOSED) {
+        this.connectWebSocket()
+      }
     }
 
     /**
      * Called after the element is removed from the DOM.
      */
     disconnectedCallback () {
-      this.#socket.close()
+      if (this.#socket) {
+        this.#socket.close()
+      }
     }
 
     /**
@@ -154,8 +160,15 @@ customElements.define('my-message-app',
      * Connection to the server.
      */
     connectWebSocket () {
+      // Create a new WebSocket.
       this.#socket = new WebSocket(SERVER_URL)
 
+      /**
+       * The connection is opened and ready to communicate.
+       */
+      this.#socket.onopen = () => {
+        console.log('The connection is open')
+      }
       /**
        * The connection is opened and ready to communicate.
        *
@@ -174,7 +187,7 @@ customElements.define('my-message-app',
        * @param {Event} event - The event.
        */
       this.#socket.onerror = event => {
-        console.error(event)
+        console.error('The connection failed', event)
       }
       /**
        * The connection is closed.
@@ -192,7 +205,7 @@ customElements.define('my-message-app',
      * @param {string} message - The message.
      */
     sendMessage (message) {
-      if (this.#socket.readyState !== WebSocket.OPEN) {
+      if (this.#socket.readyState === WebSocket.OPEN) {
         const payLoad = {
           type: 'message',
           data: message,
@@ -208,10 +221,12 @@ customElements.define('my-message-app',
 
     /**
      * Display the message.
+     *
+     * @param {object} messageData - The message data.
      */
-    displayMessage () {
+    displayMessage (messageData) {
       const messageElement = document.createElement('div')
-      messageElement.textContent = `${this.messageData.username}: ${this.messageData.data}`
+      messageElement.textContent = `${messageData.username}: ${messageData.data}`
       this.#messageContainer.appendChild(messageElement)
 
       // Keep only the lastest 20 messages.
