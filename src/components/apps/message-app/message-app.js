@@ -76,7 +76,7 @@ template.innerHTML = `
 `
 customElements.define('my-message-app',
 /**
- *
+ * Represents a message app.
  */
   class extends HTMLElement {
     /**
