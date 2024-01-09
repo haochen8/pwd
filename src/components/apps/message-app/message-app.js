@@ -4,11 +4,15 @@
  * @author // Hao Chen <hc222ig@student.lnu.se>
  * @version 1.0.0
  */
-console.log('Message App is loaded')
+import 'emoji-picker-element'
 const SERVER_URL = 'wss://courselab.lnu.se/message-app/socket'
 const API_KEY = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
 
 // Define template.
+const emojiButton = document.createElement('button')
+emojiButton.type = 'button'
+emojiButton.id = 'emojiButton'
+emojiButton.textContent = '😀'
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
@@ -55,12 +59,20 @@ template.innerHTML = `
     #sendButton:hover {
         background-color: #0069d9;
     }
+    emoji-picker {
+        display: none;
+        position: absolute;
+        bottom: 50px;
+        z-index: 10;
+      }
     </style>
 <div id="messageContainer"></div>
 <form id="sendContainer">
     <input id="messageInput" type="text" placeholder="Type your message here..." />
+    <button id="emojiButton" type="button">😀</button>
     <button id="sendButton" type="submit">Send</button>
 </form>
+<emoji-picker></emoji-picker>
 `
 customElements.define('my-message-app',
 /**
@@ -132,7 +144,24 @@ customElements.define('my-message-app',
       if (!this.#socket || this.#socket.readyState === WebSocket.CLOSED) {
         this.connectWebSocket()
       }
-      this.#messageInput.focus()
+      this.addEventListener('click', () => {
+        this.#messageInput.focus()
+      })
+      // Get the emoji button element and options in the shadow root.
+      this.emojiButton = this.shadowRoot.querySelector('#emojiButton')
+      this.emojiOptions = this.shadowRoot.querySelector('emoji-picker')
+
+      this.emojiButton.addEventListener('click', () => {
+        // Toggle the emoji options.
+        this.emojiOptions.style.display = this.emojiOptions.style.display === 'none' ? 'block' : 'none'
+      })
+      // Add event listener for emoji click.
+      this.emojiOptions.addEventListener('emoji-click', event => {
+        // Append the emoji to the message input.
+        this.#messageInput.value += event.detail.unicode
+        // Refocus the message input.
+        this.#messageInput.focus()
+      })
     }
 
     /**

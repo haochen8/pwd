@@ -33,7 +33,7 @@ function memoryGameContent () {
  */
 function messageAppContent () {
   const messageAppWidth = 400
-  const messageAppHeight = 400
+  const messageAppHeight = 500
 
   const messageAppWindow = createNewWindow('Message App', 'components/apps/images/message-app.png', null, messageAppWidth, messageAppHeight)
   const messageApp = document.createElement('my-message-app')
