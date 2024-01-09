@@ -19,6 +19,7 @@ template.innerHTML = `
     :host {
         display: flex;
         flex-direction: column;
+        
         height: 100%;
         overflow: hidden;
         background-color: #f0f0f0;

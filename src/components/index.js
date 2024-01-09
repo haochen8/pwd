@@ -23,7 +23,7 @@ document.getElementById('youtube-app-icon').addEventListener('click', function (
  */
 function youtubeAppContent () {
   const youtubeAppWidth = 560
-  const youtubeAppHeight = 450
+  const youtubeAppHeight = 400
 
   const youtubeAppWindow = createNewWindow('Youtube App', '/components/apps/images/youtube-app.png', null, youtubeAppWidth, youtubeAppHeight)
   const youtubeApp = document.createElement('my-youtube-app')
