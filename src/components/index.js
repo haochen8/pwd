@@ -6,11 +6,13 @@
  */
 
 import './apps/memory-game/memory-game.js'
+import './apps/message-app/message-app.js'
+
 document.getElementById('memory-game-icon').addEventListener('click', function () {
   memoryGameContent()
 })
 document.getElementById('message-app-icon').addEventListener('click', function () {
-  createNewWindow('Message App', 'components/apps/images/message-app.png')
+  messageAppContent()
 })
 /**
  * Memory game content.
@@ -22,6 +24,16 @@ function memoryGameContent () {
   memoryGameWindow.appendChild(memoryGame)
   memoryGame.style.width = '100%'
   memoryGame.style.height = 'calc(100% - 40px)'
+}
+/**
+ * Message app content.
+ */
+function messageAppContent () {
+  const messageAppWindow = createNewWindow('Message App', 'components/apps/images/message-app.png')
+  const messageApp = document.createElement('my-message-app')
+  messageAppWindow.appendChild(messageApp)
+  messageApp.style.width = '100%'
+  messageApp.style.height = 'calc(100% - 40px)'
 }
 /**
  * Drag the element.
@@ -265,10 +277,8 @@ function createNewWindow (appTitle, appLogo, content) {
  * @param {*} window - The window to resize.
  * @param {*} handle - The handle to resize.
  * @param {*} direction - The direction to resize.
- * @param {*} contentArea - The content area to resize.
- * @param {*} titleBar - The title bar to resize.
  */
-function initResize (window, handle, direction, contentArea, titleBar) {
+function initResize (window, handle, direction) {
   handle.addEventListener('mousedown', function (e) {
     // Prevent firing of default dragging
     e.stopPropagation()

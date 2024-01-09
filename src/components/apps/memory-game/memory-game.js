@@ -6,7 +6,6 @@
  */
 
 import '../memory-game/flipping-tile'
-console.log('memory-game.js is loaded')
 /*
  * Get image URLs.
  */
