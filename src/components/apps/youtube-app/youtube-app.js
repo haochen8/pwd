@@ -5,6 +5,7 @@
  * @version 1.0.0
  */
 
+const API_KEY = 'AIzaSyA_UPH3uAA5MZpvhJOdoOCeTYWB5-5dPrE'
 // Define template.
 const template = document.createElement('template')
 template.innerHTML = `
@@ -23,10 +24,9 @@ template.innerHTML = `
     <input id="searchInput" type="text" placeholder="Search...">
     <button id="searchButton">Search</button>
 </div>
-<iFrame id="videoPlayer" width="560" height="315" src="https://www.youtube.com/embed/5qap5aO4i9A" frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen></iFrame>
+<iframe id="videoPlayer" width="560" height="315" src="https://www.youtube.com/embed/gNcMvPCyHC0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 `
+
 customElements.define('my-youtube-app',
 
   /**
@@ -52,12 +52,6 @@ customElements.define('my-youtube-app',
      */
     #videoPlayer
     /**
-     * The element representing the api key.
-     *
-     * @type {string}
-     */
-    #apiKey
-    /**
      * Creates an instance of the youtube app web component.
      */
     constructor () {
@@ -72,7 +66,6 @@ customElements.define('my-youtube-app',
       this.#searchButton = this.shadowRoot.querySelector('#searchButton')
       // Get the video player element in the shadow root.
       this.#videoPlayer = this.shadowRoot.querySelector('#videoPlayer')
-      this.#apiKey = 'AIzaSyA_UPH3uAA5MZpvhJOdoOCeTYWB5-5dPrE'
     }
 
     /**
@@ -80,6 +73,7 @@ customElements.define('my-youtube-app',
      */
     connectedCallback () {
       this.#searchButton.addEventListener('click', event => {
+        event.preventDefault()
         this.searchVideo()
       })
     }
@@ -88,9 +82,7 @@ customElements.define('my-youtube-app',
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-      this.#searchButton.removeEventListener('click', event => {
-        this.searchVideo()
-      })
+      this.#searchButton.removeEventListener('click', this.searchVideo())
     }
 
     /**
@@ -98,20 +90,30 @@ customElements.define('my-youtube-app',
      */
     searchVideo () {
       const searchQuery = this.#searchInput.value
-      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${searchQuery}&key=${this.#apiKey}`
-
+      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&key=${API_KEY}`
+      // Fetch the data.
       fetch(url)
         .then(response => response.json())
         .then(data => {
-          if (data.items.length === 0) {
+          if (data.items.length > 0) {
             const firstResult = data.items[0]
             this.updateVideoPlayer(firstResult.id.videoId)
           } else {
-            console.log('No video found')
+            console.error('No videos found')
           }
         })
         .catch(error => {
-          console.error(error)
+          console.error('Error fetching videos', error)
         })
+    }
+
+    /**
+     * Update the video player.
+     *
+     * @param {string} videoId - The id of the video.
+     */
+    updateVideoPlayer (videoId) {
+      const videoUrl = `https://www.youtube.com/embed/${videoId}`
+      this.#videoPlayer.src = videoUrl
     }
   })
