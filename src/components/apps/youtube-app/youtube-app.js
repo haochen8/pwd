@@ -36,8 +36,25 @@ customElements.define('my-youtube-app',
       // append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
       this.shadowRoot.appendChild(template.content.cloneNode(true))
+      // Get the search input element in the shadow root.
       this.$searchInput = this.shadowRoot.querySelector('#searchInput')
+      // Get the search button element in the shadow root.
       this.$searchButton = this.shadowRoot.querySelector('#searchButton')
+      // Get the video player element in the shadow root.
       this.$videoPlayer = this.shadowRoot.querySelector('#videoPlayer')
+    }
+
+    /**
+     * Called after the element is inserted into the DOM.
+     */
+    connectedCallback () {
+      this.$searchButton.addEventListener('click', this._search.bind(this))
+    }
+
+    /**
+     * Called after the element has been removed from the DOM.
+     */
+    disconnectedCallback () {
+      this.$searchButton.removeEventListener('click', this._search.bind(this))
     }
   })

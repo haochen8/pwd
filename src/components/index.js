@@ -7,6 +7,7 @@
 
 import './apps/memory-game/memory-game.js'
 import './apps/message-app/message-app.js'
+import './apps/youtube-app/youtube-app.js'
 
 document.getElementById('memory-game-icon').addEventListener('click', function () {
   memoryGameContent()
@@ -14,6 +15,22 @@ document.getElementById('memory-game-icon').addEventListener('click', function (
 document.getElementById('message-app-icon').addEventListener('click', function () {
   messageAppContent()
 })
+document.getElementById('youtube-app-icon').addEventListener('click', function () {
+  youtubeAppContent()
+})
+/**
+ * Youtube app content.
+ */
+function youtubeAppContent () {
+  const youtubeAppWidth = 560
+  const youtubeAppHeight = 450
+
+  const youtubeAppWindow = createNewWindow('Youtube App', '/components/apps/images/youtube-app.png', null, youtubeAppWidth, youtubeAppHeight)
+  const youtubeApp = document.createElement('my-youtube-app')
+  youtubeAppWindow.appendChild(youtubeApp)
+  youtubeApp.style.width = '100%'
+  youtubeApp.style.height = 'calc(100% - 40px)'
+}
 /**
  * Memory game content.
  *
