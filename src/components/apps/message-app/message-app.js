@@ -43,16 +43,17 @@ template.innerHTML = `
         border: 1px solid #ccc;
         border-radius: 4px;
     }
-    #sendButton {
-        padding: 10px 15px;
-        background-color: #4CAF50;
+        #sendButton {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #007bff;
         color: white;
         border: none;
-        border-radius: 4px;
-        cursor: pointer;
+        border-radius: 5px;
     }
     #sendButton:hover {
-        background-color: #45a049;
+        background-color: #0069d9;
     }
     </style>
 <div id="messageContainer"></div>
@@ -131,6 +132,7 @@ customElements.define('my-message-app',
       if (!this.#socket || this.#socket.readyState === WebSocket.CLOSED) {
         this.connectWebSocket()
       }
+      this.#messageInput.focus()
     }
 
     /**

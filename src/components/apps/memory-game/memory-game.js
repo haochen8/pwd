@@ -25,6 +25,7 @@ template.innerHTML = `
     :host {
       --tile-size: 50px;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100%;

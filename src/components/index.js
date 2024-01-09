@@ -19,7 +19,10 @@ document.getElementById('message-app-icon').addEventListener('click', function (
  *
  */
 function memoryGameContent () {
-  const memoryGameWindow = createNewWindow('Memory Game', '/components/apps/images/memory-game.png')
+  const memoryGameWidth = 280
+  const memoryGameHeight = 450
+
+  const memoryGameWindow = createNewWindow('Memory Game', '/components/apps/images/memory-game.png', null, memoryGameWidth, memoryGameHeight)
   const memoryGame = document.createElement('my-memory-game')
   memoryGameWindow.appendChild(memoryGame)
   memoryGame.style.width = '100%'
@@ -29,7 +32,10 @@ function memoryGameContent () {
  * Message app content.
  */
 function messageAppContent () {
-  const messageAppWindow = createNewWindow('Message App', 'components/apps/images/message-app.png')
+  const messageAppWidth = 400
+  const messageAppHeight = 400
+
+  const messageAppWindow = createNewWindow('Message App', 'components/apps/images/message-app.png', null, messageAppWidth, messageAppHeight)
   const messageApp = document.createElement('my-message-app')
   messageAppWindow.appendChild(messageApp)
   messageApp.style.width = '100%'
@@ -122,13 +128,17 @@ const desktopHeight = 600
  * @param {string} appTitle - The title of the app.
  * @param {string} appLogo - The logo of the app.
  * @param {HTMLElement} content - The content of the app.
+ * @param {number} width - The width of the window.
+ * @param {number} height - The height of the window.
  * @returns {HTMLElement} - The new window.
  */
-function createNewWindow (appTitle, appLogo, content) {
+function createNewWindow (appTitle, appLogo, content, width = windowWidth, height = windowHeight) {
   // New window
   const newWindow = document.createElement('div')
   newWindow.className = 'window'
-  newWindow.isMaximized = false
+  newWindow.style.width = `${width}px`
+  newWindow.style.height = `${height}px`
+  // newWindow.isMaximized = false
   // Store the original size of the window
   newWindow.originalSize = { width: windowWidth, height: windowHeight }
   // Store the original position of the window
@@ -242,7 +252,7 @@ function createNewWindow (appTitle, appLogo, content) {
   titleBar.appendChild(windowControls)
   titleBar.appendChild(logoImage)
   newWindow.appendChild(titleBar)
-
+  // Append window to desktop
   document.getElementById('desktop').appendChild(newWindow)
   // Make the window draggable
   dragElement(newWindow)
