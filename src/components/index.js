@@ -40,7 +40,7 @@ function youtubeAppContent () {
 function memoryGameContent () {
   // Set the width and height of the memory game
   const memoryGameWidth = 280
-  const memoryGameHeight = 450
+  const memoryGameHeight = 490
   // Create a new window
   const memoryGameWindow = createNewWindow('Memory Game', '/components/apps/images/memory-game.png', null, memoryGameWidth, memoryGameHeight)
   const memoryGame = document.createElement('my-memory-game')

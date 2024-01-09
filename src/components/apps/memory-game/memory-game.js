@@ -38,6 +38,18 @@ template.innerHTML = `
     #game-board.small {
       grid-template-columns: repeat(2, var(--tile-size));
     }
+    #timer-display {
+      margin-top: 1px;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #f0f0f0;
+      color: #333;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 200px;
+    }
     my-flipping-tile {
       width: var(--tile-size);
       height: var(--tile-size);
@@ -77,7 +89,24 @@ customElements.define('my-memory-game',
      * @type {HTMLTemplateElement}
      */
     #tileTemplate
-
+    /**
+     * The start time.
+     *
+     * @type {number}
+     */
+    #startTime
+    /**
+     * The end time.
+     *
+     * @type {number}
+     */
+    #endTime
+    /**
+     * The timer display element.
+     *
+     * @type {number}
+     */
+    #timerDisplay
     /**
      * Creates an instance of the current type.
      */
@@ -94,6 +123,42 @@ customElements.define('my-memory-game',
 
       // Get the tile template element in the shadow root.
       this.#tileTemplate = this.shadowRoot.querySelector('#tile-template')
+      // Create a timer display element.
+      this.#timerDisplay = document.createElement('div')
+      this.#timerDisplay.id = 'timer-display'
+      this.#timerDisplay.textContent = 'Time: 0 seconds'
+      // Append the timer display element to the shadow root.
+      this.shadowRoot.appendChild(this.#timerDisplay)
+    }
+
+    /**
+     * Starts the timer.
+     */
+    #startTimer () {
+      this.#startTime = Date.now()
+      this.#updateTimer()
+    }
+
+    /**
+     * Updates the timer.
+     */
+    #updateTimer () {
+      const elapsed = Date.now() - this.#startTime
+      const seconds = Math.floor(elapsed / 1000)
+      this.#timerDisplay.textContent = `Time: ${seconds} seconds`
+      if (!this.#endTime) {
+        requestAnimationFrame(() => this.#updateTimer())
+      }
+    }
+
+    /**
+     * Stops the timer.
+     */
+    #stopTimer () {
+      this.#endTime = Date.now()
+      const totalTime = this.#endTime - this.#startTime
+      const totalSeconds = Math.floor(totalTime / 1000)
+      this.#timerDisplay.textContent = `Total time: ${totalSeconds} seconds`
     }
 
     /**
@@ -180,6 +245,7 @@ customElements.define('my-memory-game',
         event.preventDefault()
         event.stopPropagation()
       })
+      this.#startTimer()
     }
 
     /**
@@ -287,6 +353,7 @@ customElements.define('my-memory-game',
           }))
 
           if (tiles.all.every(tile => tile.hidden)) {
+            this.#stopTimer()
             tiles.all.forEach(tile => (tile.disabled = true))
             this.dispatchEvent(new CustomEvent('memory-game:game-over', {
               bubbles: true
