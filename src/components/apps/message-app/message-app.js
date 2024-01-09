@@ -5,14 +5,17 @@
  * @version 1.0.0
  */
 import 'emoji-picker-element'
+// Server URL.
 const SERVER_URL = 'wss://courselab.lnu.se/message-app/socket'
+// API key.
 const API_KEY = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
 
-// Define template.
+// Define emoji button.
 const emojiButton = document.createElement('button')
 emojiButton.type = 'button'
 emojiButton.id = 'emojiButton'
 emojiButton.textContent = '😀'
+// Define template.
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
@@ -136,6 +139,7 @@ customElements.define('my-message-app',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
+      // Add event listeners.
       this.#sendButton.addEventListener('click', event => {
         event.preventDefault()
         this.sendMessage(this.#messageInput.value)

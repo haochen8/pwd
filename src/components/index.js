@@ -4,11 +4,12 @@
  * @author // Hao Chen <hc222ig@student.lnu.se>
  * @version 1.0.0
  */
-
+// Import the web components.
 import './apps/memory-game/memory-game.js'
 import './apps/message-app/message-app.js'
 import './apps/youtube-app/youtube-app.js'
 
+// Event listener for the icons on the desktop.
 document.getElementById('memory-game-icon').addEventListener('click', function () {
   memoryGameContent()
 })
@@ -22,9 +23,10 @@ document.getElementById('youtube-app-icon').addEventListener('click', function (
  * Youtube app content.
  */
 function youtubeAppContent () {
+  // Set the width and height of the youtube app
   const youtubeAppWidth = 560
   const youtubeAppHeight = 400
-
+  // Create a new window
   const youtubeAppWindow = createNewWindow('Youtube App', '/components/apps/images/youtube-app.png', null, youtubeAppWidth, youtubeAppHeight)
   const youtubeApp = document.createElement('my-youtube-app')
   youtubeAppWindow.appendChild(youtubeApp)
@@ -36,9 +38,10 @@ function youtubeAppContent () {
  *
  */
 function memoryGameContent () {
+  // Set the width and height of the memory game
   const memoryGameWidth = 280
   const memoryGameHeight = 450
-
+  // Create a new window
   const memoryGameWindow = createNewWindow('Memory Game', '/components/apps/images/memory-game.png', null, memoryGameWidth, memoryGameHeight)
   const memoryGame = document.createElement('my-memory-game')
   memoryGameWindow.appendChild(memoryGame)
@@ -49,9 +52,10 @@ function memoryGameContent () {
  * Message app content.
  */
 function messageAppContent () {
+  // Set the width and height of the message app
   const messageAppWidth = 400
   const messageAppHeight = 500
-
+  // Create a new window
   const messageAppWindow = createNewWindow('Message App', 'components/apps/images/message-app.png', null, messageAppWidth, messageAppHeight)
   const messageApp = document.createElement('my-message-app')
   messageAppWindow.appendChild(messageApp)
@@ -132,9 +136,13 @@ const newPositionOffset = {
   x: 20,
   y: 20
 }
+// The last position of the window
 let lastPosition = { ...defaultPosition }
+// The highest z-index of the window
 let highestZIndex = 100
+// The opened windows
 const openedWindows = {}
+// The width and height of the window
 const windowWidth = 300
 const windowHeight = 200
 const desktopWidth = 1000
@@ -155,14 +163,13 @@ function createNewWindow (appTitle, appLogo, content, width = windowWidth, heigh
   newWindow.className = 'window'
   newWindow.style.width = `${width}px`
   newWindow.style.height = `${height}px`
-  // newWindow.isMaximized = false
   // Store the original size of the window
   newWindow.originalSize = { width: windowWidth, height: windowHeight }
   // Store the original position of the window
   newWindow.originalPosition = { top: '...', left: '...' }
   // Mark this app as open
   openedWindows[appTitle] = newWindow
-
+  // Set the default position of the window
   let newX = lastPosition.x + newPositionOffset.x
   let newY = lastPosition.y + newPositionOffset.y
 
@@ -171,7 +178,6 @@ function createNewWindow (appTitle, appLogo, content, width = windowWidth, heigh
     newX = defaultPosition.x
     newY = defaultPosition.y
   }
-
   newWindow.style.top = `${newY}px`
   newWindow.style.left = `${newX}px`
 
@@ -204,6 +210,7 @@ function createNewWindow (appTitle, appLogo, content, width = windowWidth, heigh
    * Maximize the window and restore it.
    */
   maximizeButton.onclick = function () {
+    // Desktop size
     const desktop = document.getElementById('desktop')
     const desktopWidth = desktop.offsetWidth
     const desktopHeight = desktop.offsetHeight
@@ -218,7 +225,6 @@ function createNewWindow (appTitle, appLogo, content, width = windowWidth, heigh
       newWindow.style.height = `${desktopHeight}px`
       newWindow.style.top = '0'
       newWindow.style.left = '0'
-
       newWindow.isMaximized = true
     } else {
       // Restore the window to its original size and position
@@ -226,7 +232,6 @@ function createNewWindow (appTitle, appLogo, content, width = windowWidth, heigh
       newWindow.style.height = `${newWindow.originalSize.height}px`
       newWindow.style.top = `${newWindow.originalPosition.y}px`
       newWindow.style.left = `${newWindow.originalPosition.x}px`
-
       newWindow.isMaximized = false
     }
 
@@ -310,6 +315,7 @@ function initResize (window, handle, direction) {
     // Prevent firing of default dragging
     e.stopPropagation()
     e.preventDefault()
+    // Get the current mouse position and window size
     const startX = e.clientX
     const startY = e.clientY
     const startWidth = window.offsetWidth
@@ -363,6 +369,7 @@ function initResize (window, handle, direction) {
  * @param {*} windowElement - The element to bring to front.
  */
 function bringToFront (windowElement) {
+  // Bring window to front
   highestZIndex++
   windowElement.style.zIndex = highestZIndex
 }

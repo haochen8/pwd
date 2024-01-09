@@ -135,12 +135,12 @@ customElements.define('my-memory-game',
       }
 
       switch (this.boardSize) {
-        case 'small' : {
+        case 'small': {
           gameBoardSize.width = gameBoardSize.height = 2
           break
         }
 
-        case 'medium' : {
+        case 'medium': {
           gameBoardSize.height = 2
           break
         }

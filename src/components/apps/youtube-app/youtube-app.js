@@ -117,9 +117,8 @@ customElements.define('my-youtube-app',
      * @param {Event} event - The click event.
      */
     searchVideoClick (event) {
+      // Prevent the default action of the event.
       event.preventDefault()
-      console.log('Search button clicked')
-      console.log('Searching for:', this.#searchInput.value)
       this.searchVideo()
     }
 
@@ -127,17 +126,19 @@ customElements.define('my-youtube-app',
      * Search for videos.
      */
     searchVideo () {
+      // Get the search query.
       const searchQuery = this.#searchInput.value
-      console.log('Searching for:', searchQuery)
       if (!searchQuery.trim()) {
         console.error('No search query')
         return
       }
+      // The URL for the API.
       const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&key=${API_KEY}`
       // Fetch the data.
       fetch(url)
         .then(response => response.json())
         .then(data => {
+          // Check if any videos were found.
           if (data.items.length > 0) {
             const firstResult = data.items[0]
             this.updateVideoPlayer(firstResult.id.videoId)
@@ -156,6 +157,7 @@ customElements.define('my-youtube-app',
      * @param {string} videoId - The id of the video.
      */
     updateVideoPlayer (videoId) {
+      // Update the video player.
       const videoUrl = `https://www.youtube.com/embed/${videoId}`
       this.#videoPlayer.src = videoUrl
     }
