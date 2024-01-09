@@ -24,9 +24,8 @@ template.innerHTML = `
     <input id="searchInput" type="text" placeholder="Search...">
     <button id="searchButton">Search</button>
 </div>
-<iframe id="videoPlayer" width="560" height="315" src="https://www.youtube.com/embed/gNcMvPCyHC0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe id="videoPlayer" width="560" height="315" src="https://www.youtube.com/embed/gNcMvPCyHC0" frameborder="0" allowfullscreen></iframe>
 `
-
 customElements.define('my-youtube-app',
 
   /**
@@ -66,15 +65,21 @@ customElements.define('my-youtube-app',
       this.#searchButton = this.shadowRoot.querySelector('#searchButton')
       // Get the video player element in the shadow root.
       this.#videoPlayer = this.shadowRoot.querySelector('#videoPlayer')
+      this.boundSearchVideoClick = this.searchVideoClick.bind(this)
     }
 
     /**
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      this.#searchButton.addEventListener('click', event => {
-        event.preventDefault()
-        this.searchVideo()
+      console.log('Adding event listeners')
+      this.#searchButton.addEventListener('click', this.boundSearchVideoClick)
+      this.#searchInput.addEventListener('focus', () => {
+        console.log('Input field is focused')
+      })
+      this.#searchInput.addEventListener('click', () => {
+        this.#searchInput.focus()
+        console.log('Input field is clicked')
       })
     }
 
@@ -82,7 +87,19 @@ customElements.define('my-youtube-app',
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-      this.#searchButton.removeEventListener('click', this.searchVideo())
+      this.#searchButton.removeEventListener('click', this.boundSearchVideoClick)
+    }
+
+    /**
+     * The click event handler for the search button.
+     *
+     * @param {Event} event - The click event.
+     */
+    searchVideoClick (event) {
+      event.preventDefault()
+      console.log('Search button clicked')
+      console.log('Searching for:', this.#searchInput.value)
+      this.searchVideo()
     }
 
     /**
@@ -90,6 +107,11 @@ customElements.define('my-youtube-app',
      */
     searchVideo () {
       const searchQuery = this.#searchInput.value
+      console.log('Searching for:', searchQuery)
+      if (!searchQuery.trim()) {
+        console.error('No search query')
+        return
+      }
       const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&key=${API_KEY}`
       // Fetch the data.
       fetch(url)
